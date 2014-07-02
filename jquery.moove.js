@@ -38,44 +38,47 @@
             }, options),
             animateSingle = function () {
                 if (settings.stagger) {
+                    console.log("stagger")
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
-                            settings.onStart($(this));
                             $(this).removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName).dequeue();
+                            settings.onStart.call(this, $(this));
                         });
                     });
                 } else {
-                    settings.onStart(self);
-                    self.removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName);
+                    self.each(function (k, v) {
+                        $(this).removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName);
+                        settings.onStart.call(this, $(this));
+                    })
                 }
 
-                self.on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-                    $(this).removeClass(settings.animClass).removeClass(settings.animName)
-                    settings.onEnd($(this));
+                self.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    $(this).removeClass(settings.animClass).removeClass(settings.animName);
+                    settings.onEnd.call(this, $(this));
                 });
             },
             animateArray = function () {
                 if (settings.stagger) {
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
-                            settings.onStart($(this));
                             var currentAnimationName = settings.animNames[k] || settings.animNames[0];
                             $(this).removeClass(currentAnimationName).addClass(settings.animClass + " " + currentAnimationName).dequeue();
+                            settings.onStart.call(this, $(this));
                         });
                     });
                 } else {
                     self.each(function (k, v) {
-                        settings.onStart($(this));
                         var currentAnimationName = settings.animNames[k] || settings.animNames[0];
                         $(this).removeClass(currentAnimationName).addClass(settings.animClass + " " + currentAnimationName);
+                        settings.onStart.call(this, $(this));
                     })
                 }
 
                 self.each(function (k, v) {
-                    $(this).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    $(this).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                         var currentAnimationName = settings.animNames[k] || settings.animNames[0];
                         $(this).removeClass(settings.animClass).removeClass(currentAnimationName);
-                        settings.onEnd($(this));
+                        settings.onEnd.call(this, $(this));
                     });
                 })
 

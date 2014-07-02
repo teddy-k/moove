@@ -108,35 +108,38 @@
             $("div").moove("rotateInUpRight", {
                 animClass: "animated",
                 delay: 500,
-                stagger: 500,
-                onStart: function (el) {
-                    el.css("background", "red");
+                stagger: 100,
+                onStart: function () {
+                    console.log("onStart", this)
+                    $(this).css("background", "red");
                 },
-                onEnd: function (el) {
-                    el.css("background", "green");
-                    console.log("yeah ! animation end")
+                onEnd: function () {
+                    console.log("onEnd", this)
+                    $(this).css("background", "green");
                 }
             }).moove(animations, {
                 animClass: "animated",
-                delay: 2000,
-                stagger: 500,
-                onStart: function (el) {
-                    el.css("background", "red");
+                delay: 10000,
+                stagger: 100,
+                onStart: function () {
+                    console.log("onStart", this)
+                    $(this).css("background", "red");
                 },
-                onEnd: function (el) {
-                    el.css("background", "green");
-                    console.log("yeah ! animation end")
+                onEnd: function () {
+                    console.log("onEnd", this)
+                    $(this).css("background", "green");
                 }
             }).moove("shake", {
                 animClass: "animated",
-                delay: 4000,
-                stagger: 500,
-                onStart: function (el) {
-                    el.css("background", "red");
+                delay: 20000,
+                stagger: 100,
+                onStart: function () {
+                    console.log("onStart", this)
+                    $(this).css("background", "red");
                 },
-                onEnd: function (el) {
-                    el.css("background", "green");
-                    console.log("yeah ! animation end")
+                onEnd: function () {
+                    console.log("onEnd", this)
+                    $(this).css("background", "green");
                 }
             });
 
