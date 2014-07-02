@@ -45,7 +45,7 @@
                         });
                     });
                 } else {
-                    settings.onStart($(this));
+                    settings.onStart(self);
                     self.removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName);
                 }
 
