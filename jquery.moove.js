@@ -9,7 +9,6 @@
  * Date: Wed Jul 02 14:23:00 2014 -0600
  * You can use it to trigger animate.css animations. But you can easily change the settings to your favorite animation library.
  */
-
 (function ($) {
     $.fn.moove = function (animationName, options) {
         var self = this;
@@ -98,5 +97,3 @@
     };
 
 }(jQuery));
-
-
