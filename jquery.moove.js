@@ -38,7 +38,6 @@
             }, options),
             animateSingle = function () {
                 if (settings.stagger) {
-                    console.log("stagger")
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
                             $(this).removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName).dequeue();
