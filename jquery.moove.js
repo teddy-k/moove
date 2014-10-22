@@ -11,17 +11,39 @@
  */
 (function ($) {
     $.fn.moove = function (animationName, options) {
-        var self = this;
+        var self = this,
+            animations = ['bounce','flash','pulse','rubberBand','shake','swing','tada','wobble',
+                          'bounceIn','bounceInDown','bounceInLeft','bounceInRight','bounceInUp',
+                          'bounceOut','bounceOutDown','bounceOutLeft','bounceOutRight','bounceOutUp',
+                          'fadeIn','fadeInDown','fadeInDownBig','fadeInLeft','fadeInLeftBig','fadeInRight','fadeInRightBig','fadeInUp','fadeInUpBig',
+                          'fadeOut','fadeOutDown','fadeOutDownBig','fadeOutLeft','fadeOutLeftBig','fadeOutRight','fadeOutRightBig','fadeOutUp','fadeOutUpBig',
+                          'flip','flipInX','flipInY','flipOutX','flipOutY',
+                          'lightSpeedIn','lightSpeedOut',
+                          'rotateIn','rotateInDownLeft','rotateInDownRight','rotateInUpLeft','rotateInUpRight',
+                          'rotateOut','rotateOutDownLeft','rotateOutDownRight','rotateOutUpLeft','rotateOutUpRight',
+                          'hinge','rollIn','rollOut',
+                          'zoomIn','zoomInDown','zoomInLeft','zoomInRight','zoomInUp',
+                          'zoomOut','zoomOutDown','zoomOutLeft','zoomOutRight','zoomOutUp',
+                          'slideInDown','slideInLeft','slideInRight','slideInUp',
+                          'slideOutDown','slideOutLeft','slideOutRight','slideOutUp'];
 
-        if (options && typeof options == "object") {
+        if (options && typeof options == 'object') {
             options = options;
         } else {
             options = {};
         }
 
-        if (animationName && typeof animationName == "string") {
+        if (animationName && typeof animationName == 'string') {
             options.animName = animationName;
+            if(animationName == 'random'){
+                options.animName = animations[Math.floor(Math.random() * animations.length)];
+            }
         } else if (animationName && animationName instanceof Array) {
+            for (var i = 0; i < animationName.length; i++) {
+                if(animationName[i] == 'random'){
+                    animationName[i] = animations[Math.floor(Math.random() * animations.length)]
+                }
+            };
             options.animNames = animationName;
         }
 
@@ -29,7 +51,7 @@
         var animate,
             settings = $.extend({
                 // These are the defaults.
-                animName: "",
+                animName: '',
                 animClass: "animated",
                 stagger: false,
                 animNames: false,
@@ -40,13 +62,13 @@
                 if (settings.stagger) {
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
-                            $(this).removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName).dequeue();
+                            $(this).removeClass(settings.animName).addClass(settings.animClass + ' ' + settings.animName).dequeue();
                             settings.onStart.call(this, $(this));
                         });
                     });
                 } else {
                     self.each(function (k, v) {
-                        $(this).removeClass(settings.animName).addClass(settings.animClass + " " + settings.animName);
+                        $(this).removeClass(settings.animName).addClass(settings.animClass + ' ' + settings.animName);
                         settings.onStart.call(this, $(this));
                     })
                 }
@@ -61,14 +83,14 @@
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
                             var currentAnimationName = settings.animNames[k] || settings.animNames[0];
-                            $(this).removeClass(currentAnimationName).addClass(settings.animClass + " " + currentAnimationName).dequeue();
+                            $(this).removeClass(currentAnimationName).addClass(settings.animClass + ' ' + currentAnimationName).dequeue();
                             settings.onStart.call(this, $(this));
                         });
                     });
                 } else {
                     self.each(function (k, v) {
                         var currentAnimationName = settings.animNames[k] || settings.animNames[0];
-                        $(this).removeClass(currentAnimationName).addClass(settings.animClass + " " + currentAnimationName);
+                        $(this).removeClass(currentAnimationName).addClass(settings.animClass + ' ' + currentAnimationName);
                         settings.onStart.call(this, $(this));
                     })
                 }
@@ -80,8 +102,13 @@
                         settings.onEnd.call(this, $(this));
                     });
                 })
-
             }
+
+        /*[TODO] 
+        * if an array is given and the length of objects are less than the length of the array 
+        * loop trougth the array 
+        * or maintain the last animation name
+        */
 
         if (settings.animNames) {
             animate = animateArray;

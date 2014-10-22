@@ -6,107 +6,49 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>moove.js</title>
         <link rel="stylesheet" href="animate.css">
-        <style type="text/css" media="screen">
-
-            body div{
-                width: 50px;
-                height: 50px;
-                background: blue;
-                display: block;
-                float: left;
-                margin: 20px;
-            }  
-
-        </style>
+        <link rel="stylesheet" href="main.css">
     </head>
     <body>
+        <header>
+            <h1>moove.js <br><a href="http://teddyk.be">by Teddy K</a> </h1>
+
+        </header>
+        <div id="container">
+            
+        </div>
+       
         
         <script src="jquery-1.10.2.min.js"></script>
         <script src="jquery.moove.js"></script>
         <script>
         
-        var animations = [
-            "bounce",
-            "flash",
-            "pulse",
-            "rubberBand",
-            "shake",
-            "swing",
-            "tada",
-            "wobble",
-
-            "bounceIn",
-            "bounceInDown",
-            "bounceInLeft",
-            "bounceInRight",
-            "bounceInUp",
-
-            "bounceOut",
-            "bounceOutDown",
-            "bounceOutLeft",
-            "bounceOutRight",
-            "bounceOutUp",
-
-            "fadeIn",
-            "fadeInDown",
-            "fadeInDownBig",
-            "fadeInLeft",
-            "fadeInLeftBig",
-            "fadeInRight",
-            "fadeInRightBig",
-            "fadeInUp",
-            "fadeInUpBig",
-
-            "fadeOut",
-            "fadeOutDown",
-            "fadeOutDownBig",
-            "fadeOutLeft",
-            "fadeOutLeftBig",
-            "fadeOutRight",
-            "fadeOutRightBig",
-            "fadeOutUp",
-            "fadeOutUpBig",
-
-            "flip",
-            "flipInX",
-            "flipInY",
-            "flipOutX",
-            "flipOutY",
-
-            "lightSpeedIn",
-            "lightSpeedOut",
-
-            "rotateIn",
-            "rotateInDownLeft",
-            "rotateInDownRight",
-            "rotateInUpLeft",
-            "rotateInUpRight",
-
-            "rotateOut",
-            "rotateOutDownLeft",
-            "rotateOutDownRight",
-            "rotateOutUpLeft",
-            "rotateOutUpRight",
-
-            "slideInDown",
-            "slideInLeft",
-            "slideInRight",
-            "slideOutLeft",
-            "slideOutRight",
-            "slideOutUp",
-
-            "hinge",
-            "rollIn",
-            "rollOut"];
+        var animations = ['bounce','flash','pulse','rubberBand','shake','swing','tada','wobble',
+                          'bounceIn','bounceInDown','bounceInLeft','bounceInRight','bounceInUp',
+                          'bounceOut','bounceOutDown','bounceOutLeft','bounceOutRight','bounceOutUp',
+                          'fadeIn','fadeInDown','fadeInDownBig','fadeInLeft','fadeInLeftBig','fadeInRight',
+                          'fadeInRightBig','fadeInUp','fadeInUpBig',
+                          'fadeOut','fadeOutDown','fadeOutDownBig','fadeOutLeft','fadeOutLeftBig','fadeOutRight',
+                          'fadeOutRightBig','fadeOutUp','fadeOutUpBig',
+                          'flip','flipInX','flipInY','flipOutX','flipOutY',
+                          'lightSpeedIn','lightSpeedOut',
+                          'rotateIn','rotateInDownLeft','rotateInDownRight','rotateInUpLeft','rotateInUpRight',
+                          'rotateOut','rotateOutDownLeft','rotateOutDownRight','rotateOutUpLeft','rotateOutUpRight',
+                          'hinge','rollIn','rollOut',
+                          'zoomIn','zoomInDown','zoomInLeft','zoomInRight','zoomInUp',
+                          'zoomOut','zoomOutDown','zoomOutLeft','zoomOutRight','zoomOutUp',
+                          'slideInDown','slideInLeft','slideInRight','slideInUp',
+                          'slideOutDown','slideOutLeft','slideOutRight','slideOutUp'];
 
         $(document).ready(function () {
-
+            var htmlString = "";
             for (var i = 0; i < animations.length; i++) {
-                document.body.innerHTML += "<div class='animated'></div>";
+                htmlString += "<div class='animated'></div>";
+                //document.body.innerHTML += "<div class='animated'></div>";
             };
 
-            $("div").moove("rotateInUpRight", {
-                animClass: "animated",
+            $("#container").html(htmlString);
+
+            $("#container div").moove("rotateInUpRight", {
                 delay: 500,
                 stagger: 100,
                 onStart: function () {
@@ -118,9 +60,8 @@
                     $(this).css("background", "green");
                 }
             }).moove(animations, {
-                animClass: "animated",
                 delay: 10000,
-                stagger: 100,
+                stagger: 200,
                 onStart: function () {
                     console.log("onStart", this)
                     $(this).css("background", "red");
@@ -130,9 +71,7 @@
                     $(this).css("background", "green");
                 }
             }).moove("shake", {
-                animClass: "animated",
-                delay: 20000,
-                stagger: 100,
+                delay: 26000,
                 onStart: function () {
                     console.log("onStart", this)
                     $(this).css("background", "red");
@@ -141,6 +80,21 @@
                     console.log("onEnd", this)
                     $(this).css("background", "green");
                 }
+            });
+
+            $("#container div").hover(function(e) {
+                $(this).moove("random", {
+                    onStart: function () {
+                        console.log("onStart", this)
+                        $(this).css("background", "red");
+                    },
+                    onEnd: function () {
+                        console.log("onEnd", this)
+                        $(this).css("background", "green");
+                    }
+                })
+            }, function(){
+                return false;
             });
 
 
