@@ -1,8 +1,8 @@
 /*global jQuery */
 /*!
- * moove.js 0.1
+ * moove.js 0.3
  *
- * Copyright 2014, Teddy Kishi http://teddyk.be
+ * Copyright 2015, Teddy Kishi http://teddyk.be
  * Released under the WTFPL license
  * http://sam.zoy.org/wtfpl/
  *
@@ -10,7 +10,6 @@
  * You can use it to trigger animate.css animations. But you can easily change the settings to your favorite animation library.
  */
 !(function ($, window) {
-    //window.mooveQueue = window.mooveQueue || [];
 
     $.fn.mooveQueue = $.fn.mooveQueue || [];
 
@@ -18,13 +17,13 @@
         //animationName, options
         var self = this, i, options = options || {},
             animations = [
-            'bounce','flash','pulse','rubberBand','shake','swing','tada','wobble','jello','hinge',
+            'bounce','flash','pulse','rubberBand','shake','swing','tada','wobble','jello',
             'bounceIn','bounceInDown','bounceInLeft','bounceInRight','bounceInUp','bounceOut','bounceOutDown','bounceOutLeft','bounceOutRight','bounceOutUp',
             'fadeIn','fadeInDown','fadeInDownBig','fadeInLeft','fadeInLeftBig','fadeInRight','fadeInRightBig','fadeInUp','fadeInUpBig',
             'fadeOut','fadeOutDown','fadeOutDownBig','fadeOutLeft','fadeOutLeftBig','fadeOutRight','fadeOutRightBig','fadeOutUp','fadeOutUpBig',
             'flipInX','flipInY','flipOutX','flipOutY',
             'lightSpeedIn','lightSpeedOut',
-            'rotateIn','rotateInDownLeft','rotateInDownRight','rotateInUpLeft','rotateInUpRight','rotateOut','rotateOutDownLeft','rotateOutDownRight','rotateOutUpLeft','rotateOutUpRight',
+            'hinge','rotateIn','rotateInDownLeft','rotateInDownRight','rotateInUpLeft','rotateInUpRight','rotateOut','rotateOutDownLeft','rotateOutDownRight','rotateOutUpLeft','rotateOutUpRight',
             'rollIn','rollOut',
             'zoomIn','zoomInDown','zoomInLeft','zoomInRight','zoomInUp','zoomOut','zoomOutDown','zoomOutLeft','zoomOutRight','zoomOutUp',
             'slideInDown','slideInLeft','slideInRight','slideInUp','slideOutDown','slideOutLeft','slideOutRight','slideOutUp'
@@ -39,13 +38,6 @@
         } 
         // multiples animations inside an array
         else if(arguments.length == 1 && arguments[0] instanceof Array) { 
-
-            /*[TODO] 
-            * if an array is given and the length of objects are less than the length of the array 
-            * loop trougth the array 
-            * or maintain the last animation name
-            */
-
             //check if an random animation has been set
             i = 0;
             while(i < arguments[0].length){
@@ -54,6 +46,7 @@
                 }
                 i++;
             }
+
             options.animNames = arguments[0];
         } 
         // an object setting is given
@@ -72,26 +65,6 @@
         }       
 
         /*
-        if (options && typeof options == 'object') { options = options; } 
-        else if(typeof animationName == 'object') { options = animationName; } 
-        else { options = {}; }
-        
-        if (animationName && typeof animationName == 'string') {
-            options.animName = animationName;
-            if(animationName == 'random'){
-                options.animName = animations[Math.floor(Math.random() * animations.length)];
-            }
-        } else if (animationName && animationName instanceof Array) {
-            for (i = 0; i < animationName.length; i++) {
-                if(animationName[i] == 'random'){
-                    animationName[i] = animations[Math.floor(Math.random() * animations.length)]
-                }
-            };
-            options.animNames = animationName;
-        }
-        */
-
-        /*
         animation speed
         -webkit-animation-duration: 1s;
                 animation-duration: 1s;
@@ -107,11 +80,13 @@
                 queue : false,
                 stagger: false,
                 animNames: false,
+                delay : false,
                 onStart: function () {},
                 onEnd: function () {}
             }, options),
 
             animateSingle = function () {
+                
                 if (settings.stagger) {
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
@@ -133,12 +108,11 @@
                     if(settings.queue){
                         if(count == self.length-1){
                             //find where id
-                            $.fn.mooveQueue .splice(0, 1);
+                            $.fn.mooveQueue.splice(0, 1);
 
-                            if($.fn.mooveQueue [0] && !$.fn.mooveQueue [0].animating){
-                                $.fn.mooveQueue [0].action();
-                                $.fn.mooveQueue [0].animating = true;
-                                console.log("do next event", $.fn.mooveQueue[0])
+                            if($.fn.mooveQueue[0] && !$.fn.mooveQueue[0].animating){
+                                $.fn.mooveQueue[0].action();
+                                $.fn.mooveQueue[0].animating = true;
                             }
                         }
                     }
@@ -147,47 +121,61 @@
             },
 
             animateArray = function () {
+                var currentAnimationName, endpos = pos = 0;
                 if (settings.stagger) {
                     self.each(function (k, v) {
                         $(this).delay(k * settings.stagger).queue(function () {
-                            var currentAnimationName = settings.animNames[k] || settings.animNames[0];
+                            if( !settings.animNames[pos] ){
+                                pos = 0;
+                            }
+                            currentAnimationName = settings.animNames[pos]; // || settings.animNames[0];
                             $(this).removeClass(currentAnimationName).addClass(settings.animClass + ' ' + currentAnimationName).dequeue();
                             settings.onStart.call(this, $(this));
+                            
+                            pos++;
                         });
                     });
                 } else {
                     self.each(function (k, v) {
-                        var currentAnimationName = settings.animNames[k] || settings.animNames[0];
+                        if( !settings.animNames[pos] ){
+                            pos = 0;
+                        }
+                        currentAnimationName = settings.animNames[pos]; // || settings.animNames[0];
                         $(this).removeClass(currentAnimationName).addClass(settings.animClass + ' ' + currentAnimationName);
                         settings.onStart.call(this, $(this));
+                        pos++;
                     })
                 }
 
                 self.each(function (k, v) {
                     $(this).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-                        var currentAnimationName = settings.animNames[k] || settings.animNames[0];
+                        if( !settings.animNames[endpos] ){
+                            endpos = 0;
+                        }
+                        currentAnimationName = settings.animNames[endpos];// || settings.animNames[0];
                         $(this).removeClass(settings.animClass).removeClass(currentAnimationName);
                         settings.onEnd.call(this, $(this));
+                        endpos++;
                     });
                 })
-            }
+            },
 
-        var myAnim = {
-            animating : false,
-            action : function(){
-                if (settings.animNames) {
-                    animate = animateArray;
-                } else {
-                    animate = animateSingle;
-                }
+            myAnim = {
+                animating : false,
+                action : function(){
+                    if (settings.animNames) {
+                        animate = animateArray;
+                    } else {
+                        animate = animateSingle;
+                    }
 
-                if (settings.delay && typeof settings.delay == "number") {
-                    setTimeout(animate, settings.delay);
-                } else {
-                    animate();
+                    if (settings.delay && typeof settings.delay == "number") {
+                        setTimeout(animate, settings.delay);
+                    } else {
+                        animate();
+                    }
                 }
             }
-        }
 
         if(settings.queue){
             $.fn.mooveQueue.push(myAnim);
@@ -198,7 +186,6 @@
         } else {
             myAnim.action();
         }
-
 
         return self;
     };
