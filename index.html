@@ -128,19 +128,19 @@
             $(document).ready(function () {
                 
                 /********************************
-                 * bounce
+                 * simple
                  ********************************/
 
-     //           $("#simple div").moove("bounce");
+                $("#simple div").moove("bounce");
 
                 /********************************
-                 * bounce
+                 * array of animations
                  ********************************/ 
 
-    //            $("#array div").moove(['bounce', 'flash', 'bounce', 'flash', 'shake']);
+                $("#array div").moove(['bounce', 'flash', 'bounce', 'flash', 'shake']);
 
                 /*******************************
-                 * bounce
+                 * array stagger
                  ********************************/ 
 
                 $("#arrayStagger div").moove(
@@ -159,7 +159,7 @@
                 /********************************
                  * multiples elements
                  ********************************/ 
-                 /*
+                
                 $("#multiples div")
                     .addClass("hide")
                     .moove({
@@ -188,9 +188,9 @@
                             $(this).removeClass('active');
                         }
                     });
-                */
+                
                 /********************************
-                 * multiples elements
+                 * trigger animation
                  ********************************/ 
 
                 $("main div").click(function(e) {

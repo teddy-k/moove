@@ -46,7 +46,6 @@
                 }
                 i++;
             }
-
             options.animNames = arguments[0];
         } 
         // an object setting is given
