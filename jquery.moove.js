@@ -9,9 +9,13 @@
  * Date: Wed Jul 02 14:23:00 2014 -0600
  * You can use it to trigger animate.css animations. But you can easily change the settings to your favorite animation library.
  */
-(function ($) {
+(function ($, window) {
+    //window.mooveQueue = window.mooveQueue || [];
+
+    $.fn.mooveQueue = $.fn.mooveQueue || [];
+
     $.fn.moove = function (animationName, options) {
-        var self = this,
+        var self = this, i,
             animations = ['bounce','flash','pulse','rubberBand','shake','swing','tada','wobble',
                           'bounceIn','bounceInDown','bounceInLeft','bounceInRight','bounceInUp',
                           'bounceOut','bounceOutDown','bounceOutLeft','bounceOutRight','bounceOutUp',
@@ -27,8 +31,11 @@
                           'slideInDown','slideInLeft','slideInRight','slideInUp',
                           'slideOutDown','slideOutLeft','slideOutRight','slideOutUp'];
 
+
         if (options && typeof options == 'object') {
             options = options;
+        } else if(typeof animationName == 'object') {
+            options = animationName;
         } else {
             options = {};
         }
@@ -39,7 +46,7 @@
                 options.animName = animations[Math.floor(Math.random() * animations.length)];
             }
         } else if (animationName && animationName instanceof Array) {
-            for (var i = 0; i < animationName.length; i++) {
+            for (i = 0; i < animationName.length; i++) {
                 if(animationName[i] == 'random'){
                     animationName[i] = animations[Math.floor(Math.random() * animations.length)]
                 }
@@ -48,16 +55,19 @@
         }
 
         // This is the easiest way to have default options.
-        var animate,
+        var animate, i,
+            count = 0,
             settings = $.extend({
                 // These are the defaults.
                 animName: '',
                 animClass: "animated",
+                queue : false,
                 stagger: false,
                 animNames: false,
                 onStart: function () {},
                 onEnd: function () {}
             }, options),
+
             animateSingle = function () {
                 if (settings.stagger) {
                     self.each(function (k, v) {
@@ -76,8 +86,23 @@
                 self.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                     $(this).removeClass(settings.animClass).removeClass(settings.animName);
                     settings.onEnd.call(this, $(this));
+
+                    if(settings.queue){
+                        if(count == self.length-1){
+                            //find where id
+                            $.fn.mooveQueue .splice(0, 1);
+
+                            if($.fn.mooveQueue [0] && !$.fn.mooveQueue [0].animating){
+                                $.fn.mooveQueue [0].action();
+                                $.fn.mooveQueue [0].animating = true;
+                                console.log("do next event", $.fn.mooveQueue[0])
+                            }
+                        }
+                    }
+                    count++;
                 });
             },
+
             animateArray = function () {
                 if (settings.stagger) {
                     self.each(function (k, v) {
@@ -110,19 +135,38 @@
         * or maintain the last animation name
         */
 
-        if (settings.animNames) {
-            animate = animateArray;
-        } else {
-            animate = animateSingle;
+        var myAnim = {
+            animating : false,
+            action : function(){
+                if (settings.animNames) {
+                    animate = animateArray;
+                } else {
+                    animate = animateSingle;
+                }
+
+                if (settings.delay && typeof settings.delay == "number") {
+                    setTimeout(animate, settings.delay);
+                } else {
+                    animate();
+                }
+            }
         }
 
-        if (settings.delay && typeof settings.delay == "number") {
-            setTimeout(animate, settings.delay);
+        if(settings.queue){
+            $.fn.mooveQueue.push(myAnim);
+
+            if(!$.fn.mooveQueue[0].animating){
+                $.fn.mooveQueue[0].action();
+                $.fn.mooveQueue[0].animating = true;
+            }
         } else {
-            animate();
+            myAnim.action();
         }
+
+        
+
 
         return self;
     };
 
-}(jQuery));
+}(jQuery, window));
