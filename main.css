@@ -5,7 +5,7 @@
 }
 
 html {
-    font-family: sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-text-size-adjust: 100%;
        -moz-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
@@ -13,7 +13,6 @@ html {
 }
 
 body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     color: #333;
     background-color: #fff;
 }
@@ -38,11 +37,11 @@ a:hover,a:focus {
 }
 
 main {
-    max-width: 600px;
+    max-width: 500px;
+    width: 80%;
     margin: 0 auto;
 } 
 main section {
-    float: left;
     width : 100%;
     margin-bottom:  20px;
     overflow: visible;
@@ -58,7 +57,14 @@ main section div {
   color: #fff;
   cursor: pointer;
   display: inline-block;
+  -webkit-transition : opacity .2s;
+  -moz-transition : opacity .2s;
+  -o-transition : opacity .2s;
+  transition : opacity .2s;
 } 
+main section div:hover { opacity: .6; }
+
+.active { background : magenta }
 .hide { opacity: 0; }
 .show { opacity: 1; }
 

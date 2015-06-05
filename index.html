@@ -20,9 +20,29 @@
             <section id="simple">
                 <div class="animated">bounce</div>
             </section>
+
+            <h2>array : </h2>
+            <section id="array">
+                <div class="animated">bounce</div> 
+                <div class="animated">flash</div>
+                <div class="animated">bounce</div>
+                <div class="animated">flash</div>
+                <div class="animated">shake</div>
+            </section>
+
+            <h2>array stagger : </h2>
+            <section id="arrayStagger">
+                <div class="animated">shake</div> 
+                <div class="animated">shake</div>
+                <div class="animated">pulse</div>
+                <div class="animated">shake</div>
+                <div class="animated">shake</div>
+                <div class="animated">pulse</div>
+            </section>
             
             <h2>multiples : </h2>
-            <section id="multiples"><div class="animated">bounce</div>
+            <section id="multiples">
+                <div class="animated">bounce</div>
                 <div class="animated">flash</div>
                 <div class="animated">pulse</div>
                 <div class="animated">rubberBand</div>
@@ -30,6 +50,7 @@
                 <div class="animated">swing</div>
                 <div class="animated">tada</div>
                 <div class="animated">wobble</div>
+                <div class="animated">jello</div>
                 <div class="animated">bounceIn</div>
                 <div class="animated">bounceInDown</div>
                 <div class="animated">bounceInLeft</div>
@@ -58,8 +79,7 @@
                 <div class="animated">fadeOutRightBig</div>
                 <div class="animated">fadeOutUp</div>
                 <div class="animated">fadeOutUpBig</div>
-                <div class="animated">flip</div>
-                <div class="animated">flipInX</div>
+                <div class="animated">flipInX</div> 
                 <div class="animated">flipInY</div>
                 <div class="animated">flipOutX</div>
                 <div class="animated">flipOutY</div>
@@ -107,12 +127,43 @@
 
             $(document).ready(function () {
                 
-                // bounce
+                /********************************
+                 * bounce
+                 ********************************/
+
                 $("#simple div").moove("bounce");
+                
+                $("#simple div").click(function(){
+                    $(this).moove("bounce");
+                })
 
+                /********************************
+                 * bounce
+                 ********************************/ 
 
-                // multiples elements
+                $("#array div").moove(['bounce', 'flash', 'bounce', 'flash', 'shake']);
 
+                /*******************************
+                 * bounce
+                 ********************************/ 
+
+                $("#arrayStagger div").moove(
+                    ['shake', 'shake', 'pulse', 'shake', 'shake', 'pulse'],
+                    {
+                        delay: 2000,
+                        stagger: 1000,
+                        onStart: function () { 
+                            $(this).addClass('active'); 
+                        },
+                        onEnd: function () {  
+                            $(this).removeClass('active'); 
+                        }
+                    });
+
+                /********************************
+                 * multiples elements
+                 ********************************/ 
+                 
                 $("#multiples div")
                     .addClass("hide")
                     .moove({
@@ -121,39 +172,39 @@
                         stagger: 100,
                         queue : true,
                         onStart: function () { 
-                            $(this).removeClass("hide").css("background", "orange"); 
-                        },
-                        onEnd: function () { $(this).css("background", "green"); }
+                            $(this).removeClass("hide").addClass('active');
+                        }
                     })
                     .moove("fadeInUp", {
                         stagger: 200,
                         queue : true,
-                        onStart: function () { $(this).css("background", "blue"); },
-                        onEnd: function () {  $(this).css("background", "magenta"); }
+                        onEnd: function () {  
+                            $(this).removeClass('active'); 
+                        }
                     })
                     .moove("shake", {
                         delay: 1000,
                         queue : true,
-                        onStart: function () { $(this).css("background", "black"); },
-                        onEnd: function () { $(this).css("background", "black"); }
+                        onStart: function () { 
+                            $(this).addClass('active');
+                        },
+                        onEnd: function () { 
+                            $(this).removeClass('active');
+                        }
                     });
-                    
-                //console.log(mooveQueue)
                 
-                $("#multiples div").hover(function(e) {
-
+                $("#multiples div").click(function(e) {
                     var animation = $(this).text();
-
                     $(this).moove(animation, {
-                        onStart: function () { $(this).css("background", "red"); },
-                        onEnd: function () { $(this).css("background", "green"); }
+                        onStart: function () { 
+                            $(this).addClass('active'); 
+                        },
+                        onEnd: function () { 
+                            $(this).removeClass('active'); 
+                        }
                     })
-
-                }, function(){
-                    return false;
                 });
-
-
+                
 
             });
 
